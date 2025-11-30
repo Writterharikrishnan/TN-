@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TN EB Bill Calculator | Tamil Nadu Electricity Bill Estimator</title>
+<meta name="description" content="Calculate your Tamil Nadu electricity bill (TN EB) quickly and accurately. Domestic and commercial rates included. Bi-monthly & monthly options. Slab-wise breakdown and estimated total.">
+<meta name="keywords" content="TN EB calculator, TNEB bill calculator, Tamil Nadu electricity bill, TN electricity bill estimator, domestic EB calculation, commercial EB calculation, TN electricity slab rates, TN EB online calculator">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* --- Global Resets & Typography --- */
+:root {
+  --primary: #2563eb;       /* Electric Blue */
+  --primary-dark: #1e40af;
+  --accent: #06b6d4;        /* Cyan */
+  --bg-grad: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  --surface: #ffffff;
+  --text-main: #1e293b;
+  --text-light: #64748b;
+  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-grad);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Main Layout --- */
+.container {
+  max-width: 1000px;
+  width: 90%;
+  margin: 40px auto;
+  background: var(--surface);
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.calculator, .table-container {
+  flex: 1 1 400px;
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Typography & SEO Content --- */
+h1 {
+  text-align: left;
+  color: var(--text-main);
+  margin-bottom: 10px;
+  font-weight: 800;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 10px;
+}
+
+.seo-paragraph {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+/* --- Form Elements --- */
+.input-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  transition: 0.3s;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px 14px 14px 45px; /* Space for icon */
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #f8fafc;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+input:focus + i, .input-wrapper:focus-within i {
+  color: var(--primary);
+}
+
+/* --- Action Button --- */
+button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(37, 99, 235, 0.4);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* --- Results Area --- */
+.result {
+  margin-top: 30px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: var(--shadow);
+  display: none;
+  animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Tables --- */
+table {
+  width: 100%;
+  border-collapse: separate; 
+  border-spacing: 0;
+  margin-top: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+}
+
+th {
+  background: #f1f5f9;
+  color: var(--text-main);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background-color: #f8fafc;
+}
+
+/* Highlight the Total Amount */
+.bill-total {
+  font-size: 1.5rem;
+  color: var(--primary);
+  font-weight: 800;
+  text-align: center;
+  display: block;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px dashed #cbd5e1;
+}
+
+/* --- Responsive --- */
+@media(max-width: 920px){
+  .container { flex-direction: column; padding: 25px; }
+  h1 { text-align: center; }
+  .calculator, .table-container { flex: 1 1 auto; }
+}
+
+.confetti {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  top: 0; left: 0;
+  z-index: 0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="calculator">
+    <h1>TN EB Bill Calculator</h1>
+    <p class="seo-paragraph">Use this TN EB Bill Calculator to quickly estimate your electricity bill for Tamil Nadu residents. Enter units consumed, select your billing cycle, and connection type. View detailed slab-wise breakdown and final charges.</p>
+    
+    <div class="input-group">
+      <label for="units">Units Consumed</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-bolt"></i>
+        <input id="units" type="number" placeholder="e.g. 350" min="0" />
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="cycle">Billing Cycle</label>
+      <div class="input-wrapper">
+        <i class="fa-regular fa-calendar-days"></i>
+        <select id="cycle">
+          <option value="bimonthly">Bi-Monthly (Standard)</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="type">Connection Type</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-house-chimney"></i>
+        <select id="type">
+          <option value="domestic">Domestic</option>
+          <option value="commercial">Commercial</option>
+        </select>
+      </div>
+    </div>
+
+    <button onclick="calc()">Calculate Bill <i class="fa-solid fa-calculator" style="margin-left:8px"></i></button>
+
+    <div id="result" class="result"></div>
+    <canvas class="confetti" id="confettiCanvas"></canvas>
+  </div>
+
+  <div class="table-container">
+    <h2>Current Tariff Rates</h2>
+    
+    <div style="margin-bottom: 30px;">
+      <h3 style="font-size: 1rem; color: var(--text-main); margin-bottom: 10px;">Domestic (₹/unit)</h3>
+      <table>
+        <tr><th>Units Range</th><th>Rate (₹)</th></tr>
+        <tr><td>1 - 100</td><td>0.00</td></tr>
+        <tr><td>101 - 200</td><td>2.35</td></tr>
+        <tr><td>201 - 400</td><td>4.70</td></tr>
+        <tr><td>401 & Above</td><td>6.30</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1rem; color: var(--text-main); margin-bottom: 10px;">Commercial (₹/unit)</h3>
+      <table>
+        <tr><th>Category</th><th>Rate (₹)</th></tr>
+        <tr><td>All Units</td><td>8.80</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+// Logic remains identical to preserve calculation accuracy
+const domesticSlabs = [
+  { upTo: 100, rate: 0 },
+  { upTo: 200, rate: 2.35 },
+  { upTo: 400, rate: 4.70 },
+];
+const domesticAbove400 = 6.30;
+const domesticFixedCharge = 40;
+const taxPerUnit = 1.5; // Placeholder tax logic from original
+
+function calcEnergy(units){
+  let rem = units, cost = 0, breakdown = [], last = 0;
+  for(const slab of domesticSlabs){
+    let limit = slab.upTo - last;
+    let use = Math.min(rem, limit);
+    if(use > 0){
+      cost += use * slab.rate;
+      // Formatting the breakdown string for cleaner HTML output later
+      breakdown.push({range: `${last+1}-${slab.upTo}`, units: use, rate: slab.rate, total: (use*slab.rate)});
+      rem -= use;
+    }
+    last = slab.upTo;
+    if(rem <= 0) break;
+  }
+  if(rem > 0){
+    cost += rem * domesticAbove400;
+    breakdown.push({range: `400+`, units: rem, rate: domesticAbove400, total: (rem*domesticAbove400)});
+  }
+  return { cost, breakdown };
+}
+
+function runConfetti(){
+  var duration = 2 * 1000;
+  var end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 5, 
+      startVelocity: 30, 
+      spread: 360, 
+      origin: {x: Math.random(), y: Math.random() - 0.2},
+      colors: ['#2563eb', '#06b6d4', '#ffffff'] // Custom confetti colors to match theme
+    });
+    if(Date.now() < end){ requestAnimationFrame(frame); }
+  })();
+}
+
+function calc(){
+  let u = Number(document.getElementById('units').value);
+  let cyc = document.getElementById('cycle').value;
+  let type = document.getElementById('type').value;
+  let resultDiv = document.getElementById('result');
+
+  if(!u || u <= 0){ 
+    // Shake animation or alert
+    alert('Please enter valid units consumed'); 
+    return; 
+  }
+
+  let bi = (cyc === 'monthly') ? u * 2 : u;
+
+  if(type === 'domestic'){
+    let { cost, breakdown } = calcEnergy(bi);
+    let totalFixed = domesticFixedCharge;
+    let totalDuty = bi * taxPerUnit; // Using original logic
+    let total = cost + totalFixed + totalDuty;
+    
+    // Adjust for monthly view if selected
+    if(cyc === 'monthly'){ total /= 2; totalFixed /= 2; totalDuty /= 2; }
+
+    resultDiv.style.display = 'block';
+    
+    // Generating the HTML for results
+    let html = `<span class="bill-total">Estimated Bill: ₹${total.toFixed(2)}</span>`;
+    html += `<table><tr><th>Slab</th><th>Rate</th><th>Units</th><th>Cost</th></tr>`;
+    
+    breakdown.forEach(b => {
+       // If showing monthly, we need to split display numbers strictly for visual (math already done)
+       // However, slab calc is usually based on bi-monthly tiers. 
+       // Keeping logic strictly to original code provided to avoid tariff errors.
+       html += `<tr>
+          <td>${b.range}</td>
+          <td>₹${b.rate.toFixed(2)}</td>
+          <td>${b.units}</td>
+          <td>₹${b.total.toFixed(2)}</td>
+       </tr>`;
+    });
+    
+    html += `<tr><td colspan='3' style='text-align:right; font-weight:600'>Fixed Charges</td><td style='font-weight:600'>₹${totalFixed.toFixed(2)}</td></tr>`;
+    html += `<tr><td colspan='3' style='text-align:right; font-weight:600'>Electricity Duty</td><td style='font-weight:600'>₹${totalDuty.toFixed(2)}</td></tr>`;
+    html += `</table>`;
+    
+    if(cyc === 'monthly') {
+        html += `<p style='font-size:0.8rem; color:#64748b; margin-top:10px; text-align:center;'>* Calculated on bi-monthly slab basis, divided by 2.</p>`;
+    }
+    
+    resultDiv.innerHTML = html;
+    runConfetti();
+    
+  } else {
+    // Commercial Logic
+    let rate = 8.80;
+    let energy = bi * rate;
+    let fixed = 200;
+    let duty = bi * taxPerUnit;
+    let total = energy + fixed + duty;
+    
+    if(cyc === 'monthly'){ total /= 2; energy /= 2; fixed /= 2; duty /= 2; }
+
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `<span class="bill-total">Commercial Bill: ₹${total.toFixed(2)}</span>` +
+                          `<table><tr><th>Description</th><th>Rate</th><th>Units</th><th>Amount</th></tr>` +
+                          `<tr><td>Energy Charge</td><td>₹${rate}</td><td>${bi}</td><td>₹${energy.toFixed(2)}</td></tr>` +
+                          `<tr><td>Fixed Charge</td><td>-</td><td>-</td><td>₹${fixed.toFixed(2)}</td></tr>` +
+                          `<tr><td>Duty</td><td>-</td><td>-</td><td>₹${duty.toFixed(2)}</td></tr>` +
+                          `</table>`;
+    runConfetti();
+  }
+}
+</script>
+</body>
+</html>
